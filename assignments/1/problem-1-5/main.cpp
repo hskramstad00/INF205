@@ -15,7 +15,6 @@ int main(int argc, char** argv)
     {
         std::string arg(argv[i]);
 
-        // insert returns {iterator, inserted_bool}
         auto [it, inserted] = seen.insert(arg);
         if (inserted)
             unique_args.push_back(std::move(arg));
