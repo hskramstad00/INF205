@@ -38,3 +38,7 @@ int main() {
     
     return 0;
 }
+
+// The byte 0xF represents -12 in hexadecimal, while the following 0xFF
+// bytes are du to sign extension because the number is negative.
+//  Since 0xFF comes first confirms little-endian format.
