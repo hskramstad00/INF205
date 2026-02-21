@@ -34,7 +34,4 @@ namespace litindex
       int section{};
       int page{};
    };
-
-   std::istream& operator>>(std::istream& in, BookIndex& b);
-   std::ostream& operator<<(std::ostream& out, const BookIndex& b);
 }

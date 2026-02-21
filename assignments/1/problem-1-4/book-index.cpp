@@ -3,28 +3,6 @@
 
 using namespace litindex;
 
-
-std::istream& litindex::operator>>(std::istream& in, BookIndex& b)
-{
-   int c{}, s{}, p{};
-   if (in >> c >> s >> p)
-   {
-      b.set_chapter(c);
-      b.set_section(s);
-      b.set_page(p);
-   }
-   return in;
-}
-
-std::ostream& litindex::operator<<(std::ostream& out, const BookIndex& b)
-{
-   // Same format as out(), but to any stream
-   out << "Section " << b.get_chapter() << "." << b.get_section()
-       << ", p. " << b.get_page();
-   return out;
-}
-
-
 /* Remark: Not good style. See Core Guidelines C.49 for better style. */
 BookIndex::BookIndex(int c, int s, int p)
 {
