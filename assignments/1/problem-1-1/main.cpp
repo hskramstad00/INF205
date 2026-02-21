@@ -1,40 +1,39 @@
 #include <iostream>
-using namespace std;
+#include <cstddef>  // std::ptrdiff_t
 
-int main(){
-    short ShortType;
-    int IntType;
-    long LongType;
-    long long LongLongType;
 
-    // Calculate and Print out
+int main() {
+    std::cout <<"størrelser (bytes):\n";
+    std::cout <<"char: " << sizeof(char) << '\n';
+    std::cout <<"short: " << sizeof(short) << '\n';
+    std::cout <<"int: " << sizeof(int) << '\n';
+    std::cout <<"long: " << sizeof(long) << '\n';
+    std::cout <<"long long: " << sizeof(long long) << '\n';
+    std::cout <<"float: " << sizeof(float) << '\n';
+    std::cout <<"double: " << sizeof(double) << '\n';
+    std::cout <<"long double: " << sizeof(long double) << '\n';
+    std::cout <<"bool: " << sizeof(bool) << '\n';
 
-    // For short
-    cout <<  "Size of short is: " << sizeof(ShortType)
-         << "\n";
+int arr[2]= {0, 0};
+int* p = &arr[0];
 
-    // For int
-    cout << "Size of int is: " << sizeof(IntType)
-         << "\n";
+char*b0= reinterpret_cast<char*>(p);
+++p;
+char* b1 = reinterpret_cast<char*>(p);
 
-    // For long
-    cout << "Size of long is: " << sizeof(LongType)
-         << "\n";
+std::ptrdiff_t diff = b1 - b0;
 
-    // For long long
-    cout << "Size of long long is: " <<sizeof(LongLongType)
-         << "\n";
+std::cout << "Verifikasjon (int):\n";
+std::cout << "sizeof(int): " << sizeof(int) << "bytes\n";
+std::cout << "Byte-avstand mellom p og (p++): "<< diff << " bytes\n";
 
-    int x;
-    int* p = &x;
+if (diff ==static_cast<std::ptrdiff_t>(sizeof(int))) {
+    std::cout << "OK: diff stemmer med sizeof(int).\n";
+} else {
+    std::cout << "FEIL: diff stemmer ikke med sizeof(int).\n";
 
-    cout << "Adress p : " << p << "\n";
 
-    cout << "Adress p +1 : " << p +1 << "\n";
+}
 
-    cout << "Distance in bytes: "
-         << reinterpret_cast<char*>(p+1) - reinterpret_cast<char*>(p)
-         << "\n";
-
-    return 0;
+return 0;
 }

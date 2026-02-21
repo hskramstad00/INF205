@@ -1,43 +1,40 @@
 #include <iostream>
-using namespace std;
+#include <cstddef>  // size_t
 
-char HexDigit(int x){
-    if (x < 10) return '0' + x;
-    return 'a' + (x - 10);
+char hex_digit(int v) {
+    return (v < 10) ? ('0' + v) : ('a' + (v - 10));
 }
 
-void PrintBytes(const void* ptr, size_t size){
-    const unsigned char* p =
-        reinterpret_cast<const unsigned char*>(ptr);
+void print_bytes(const void* ptr, std::size_t nbytes) {
+    const unsigned char* p= reinterpret_cast<const unsigned char*>(ptr);
 
-
-    for (size_t i=0; i < size; ++i){ 
+    for (std::size_t i = 0; i < nbytes; ++i) {
         unsigned char c = p[i];
-        cout  << "0x"
-            << HexDigit(c / 16)
-            << HexDigit(c % 16)
-            << " ";
+        int hi = c/16;
+        int lo = c%16;
+
+        std::cout <<"0x" << hex_digit(hi) << hex_digit(lo);
+        if (i +1 != nbytes) std::cout << " ";
     }
-    cout << "\n";
+    std::cout << "\n";
 }
 
-int main(){
+template <typename T>
+void demo(const char* name, T value) {
+    std::cout << name << " (" << sizeof(T) << " bytes):\n";
+    print_bytes(&value, sizeof(T));
+}
+
+int main() {
     short s = -12;
     int i = -12;
     long l = -12;
     long long ll = -12;
 
-    cout << "short: ";
-    PrintBytes(&s, sizeof(s));
-
-    cout << "int: ";
-    PrintBytes(&i, sizeof(i));
-
-    cout << "long: ";
-    PrintBytes(&l, sizeof(l));
-
-    cout << "long long: ";
-    PrintBytes(&ll, sizeof(ll));
-
+    demo("short", s);
+    demo("int", i); 
+    demo("long", l);
+    demo("long long", ll);
+    
     return 0;
 }
