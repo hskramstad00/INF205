@@ -31,7 +31,7 @@ Ingen `.cpp` fil – alt er `= 0` (rene virtuelle metoder).
 
 ---
 
-### `incidence_graph.h` / `incidence_graph.cpp`
+### `incidenceListGraph.h` / `incidencListGraph.cpp`
 **Insidensliste-implementering** (Oppgave 2.1).  
 Noder og kanter er begge objekter. Hvert objekt har en liste over de andre objektene det er direkte koblet til.
 
@@ -52,7 +52,7 @@ Implementerer også **femmerregelen** (Oppgave 2.6) siden klassen eier heap-minn
 
 ---
 
-### `matrix_graph.h` / `matrix_graph.cpp`
+### `adjacencyMatrixGraph.h` / `adjacencyMatrixGraph.cpp`
 **Matrisebasert implementering** (Oppgave 2.4).  
 Bare noder er objekter. Kanter representeres som verdier i en 2D-tabell.
 
@@ -86,30 +86,35 @@ Trondheim buss Oslo
 
 ---
 
-## Kompilering og kjøring
+## Makefile – kompilering og kjøring
 
-### Kompiler
+Makefilen finner automatisk alle `.cpp` filer i mappa og kompilerer dem.
+
+### Kommandoer
+
+| Kommando | Hva den gjør |
+|---|---|
+| `make` | Kompiler alle `.cpp` filer til `graph` |
+| `make run` | Kompiler og kjør programmet |
+| `make clean` | Slett `.o` objektfiler |
+| `make clear` | Slett `.o`, zip, binary og `.bmp` filer |
+| `make zip` | Lag `2.zip` klar for Canvas-innlevering |
+
+### Hvordan Makefilen fungerer
+
+- **`wildcard *.cpp`** → finner automatisk alle `.cpp` filer i mappa, ingen manuell listing
+- **`patsubst %.cpp,%.o,...`** → bytter `.cpp` med `.o` for å lage objektfil-liste
+- **`-g3`** → inkluderer debug-info (nyttig med `gdb`)
+- **`zip`-kommandoen** inkluderer kun `Makefile`, `.cpp`, `.h` og `.pxl` – **ingen kompilerte filer** ✓
+
+### Eksempel
+
 ```bash
-g++ -std=c++17 -o graf main.cpp incidence_graph.cpp matrix_graph.cpp
+make run    # bygg og kjør
+make zip    # lag 2.zip for innlevering på Canvas
 ```
 
-### Kjør
-```bash
-./graf
-```
-
-### Med en input-fil
-```bash
-./graf < input.txt
-```
-
-### Eksempel input-fil (`input.txt`)
-```
-Oslo fly Bergen
-Bergen tog Trondheim
-Trondheim buss Oslo
-Oslo bil Trondheim
-```
+> **OBS:** Innrykk i Makefile **må** være TAB, ikke mellomrom – ellers feiler `make`
 
 ---
 
@@ -135,4 +140,5 @@ Oslo bil Trondheim
 - **Bruker `delete` istedet for `delete[]`** → bare første element frigjøres
 - **Glemmer å oppdatere insidenslista til begge noder** ved sletting
 - **Ikke sjekker om node finnes** før `disconnect`/`remove_node` → krasj
-- **Leverer kompilerte filer** (`.o`, kjørbar fil) – skal ikke være med i zip!
+- **Leverer kompilerte filer** – bruk `make zip` så er dette håndtert automatisk ✓
+- **Innrykk i Makefile med mellomrom istedet for TAB** → `make` feiler med kryptisk feilmelding
