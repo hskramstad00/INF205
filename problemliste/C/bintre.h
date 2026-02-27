@@ -8,6 +8,7 @@ class Bintre
     Bintre(double x): item{NAN} {}
     ~Bintre(){
     }
+        if(this->left == nullptr)
 
     Bintre(const Bintre& orginal) = delete;
     Bintre& operator=(const Bintre& rhs) = delete;

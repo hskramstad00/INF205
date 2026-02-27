@@ -2,8 +2,10 @@
 
 void Bintre::insert(double x)
 {
-    if(std::isnan(this >item))
+    if(std::isnan(this->item))
     {
-        this->item = x
+        this->item = x;
+        return;
     }
+    if(x < this)
 }

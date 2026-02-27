@@ -2,14 +2,14 @@
 #include <string>
 #include <list>
 
-class incidenceGraph : public Graph {
+class IncidenceGraph : public Graph {
     public:
-        incidenceGraph() = default;
-        incidenceGraph(const incidenceGraph& other);
-        incidenceGraph(incidenceGraph&& other) noexcept;
-        incidenceGraph& operator=(const incidenceGraph& other);
-        incidenceGraph& operator=(incidenceGraph&& other) noexcept;
-        ~incidenceGraph();
+        IncidenceGraph() = default;
+        IncidenceGraph(const IncidenceGraph& other);
+        IncidenceGraph(IncidenceGraph&& other) noexcept;
+        IncidenceGraph& operator=(const IncidenceGraph& other);
+        IncidenceGraph& operator=(IncidenceGraph&& other) noexcept;
+        ~IncidenceGraph();
 
         void insert_edge(std::string a, std::string edge_label, std::string b) override;
         void disconnect(std::string a, std::string b) override;
