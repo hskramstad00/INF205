@@ -20,7 +20,7 @@ namespace
 
 int main()
 {
-    std::array<char, 7> arr = { 'I', 'N', 'F', '2', '0', '5', '\0' };
+    std::array<char, 7> arr = { 'I', 'N', 'F', '2', '0', '5', '\0'};
 
     increment_at_position_by_value(5, arr);
     std::cout << "\tarr after pass-by-value call: \"" << arr.data() << "\"\n\n";
