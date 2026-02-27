@@ -163,3 +163,10 @@ IncidenceGraph& IncidenceGraph::operator=(IncidenceGraph&& other) noexcept {
     edges = std::move(other.edges);
     return *this;
 }
+
+void IncidenceGraph::clear() {
+    for(Edge* e : edges) delete e;
+    for(Node* n : nodes) delete n;
+    edges.clear();
+    nodes.clear();
+}

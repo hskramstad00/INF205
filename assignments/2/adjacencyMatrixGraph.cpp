@@ -108,3 +108,8 @@ void MatrixGraph::read(std::istream& is) {
     while(is >> a >> edge_label >> b)
         insert_edge(a, edge_label, b);
 }
+
+void MatrixGraph::clear() {
+    node_labels.clear();
+    adjacency.clear();
+}

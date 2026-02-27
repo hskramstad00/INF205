@@ -1,3 +1,4 @@
+#pragma once
 #include "graph.h"
 #include <string>
 #include <list>
@@ -16,6 +17,7 @@ class IncidenceGraph : public Graph {
         void remove_node(std::string label) override;
         void read(std::istream& os) override;
         void write(std::ostream& iss) const override;
+        void clear() override;
 
     private:
 

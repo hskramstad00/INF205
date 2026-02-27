@@ -1,3 +1,4 @@
+#pragma once
 #include "graph.h"
 #include <vector>
 #include <list>
@@ -18,6 +19,7 @@ class MatrixGraph : public Graph {
         void remove_node(std::string label) override;
         void write(std::ostream& os) const override;
         void read(std::istream& is) override;
+        void clear() override;
 
     private:
         std::vector<std::string> node_labels;
@@ -28,4 +30,5 @@ class MatrixGraph : public Graph {
         int find_node(const std::string& label) const; // returnerer -1 om ikke funnet
         void resize_matrix(int new_size);
         void remove_isolated_nodes();
+       
 };
