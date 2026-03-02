@@ -57,6 +57,7 @@ compile_commands.json
 *.log 
 *.bak 
 *.swp 
+*.exe
 
 # vcpkg
 vcpkg_installed/
@@ -81,3 +82,5 @@ PrintStandard
 main2
 
 test
+
+graph
