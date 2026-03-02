@@ -2,12 +2,13 @@
 #include <iostream>
 #include <stdexcept>
 
-// ---------- Private hjelpemetoder ----------
+
 
 int MatrixGraph::find_node(const std::string& label) const {
     for(int i = 0; i < (int)node_labels.size(); i++)
         if(node_labels[i] == label) return i;
-    return -1; // ikke funnet
+    return -1; 
+    // returnerer -1 om ikke funnet
 }
 
 int MatrixGraph::find_or_create_node(const std::string& label) {
@@ -18,11 +19,9 @@ int MatrixGraph::find_or_create_node(const std::string& label) {
     node_labels.push_back(label);
     int n = node_labels.size();
 
-    // Utvid matrisen: legg til ny kolonne i hver eksisterende rad
     for(auto& row : adjacency)
         row.push_back({});
 
-    // Legg til ny rad (en kolonne per node inkludert den nye)
     adjacency.push_back(std::vector<std::list<std::string>>(n));
 
     return n - 1;
@@ -36,11 +35,9 @@ void MatrixGraph::remove_isolated_nodes() {
         for(int i = 0; i < (int)node_labels.size(); i++) {
             bool isolated = true;
 
-            // Sjekk raden (kanter ut fra node i)
             for(int j = 0; j < (int)node_labels.size(); j++)
                 if(!adjacency[i][j].empty()) { isolated = false; break; }
 
-            // Sjekk kolonnen (kanter inn til node i)
             if(isolated)
                 for(int j = 0; j < (int)node_labels.size(); j++)
                     if(!adjacency[j][i].empty()) { isolated = false; break; }
@@ -48,18 +45,18 @@ void MatrixGraph::remove_isolated_nodes() {
             if(isolated) {
                 // Fjern rad i
                 adjacency.erase(adjacency.begin() + i);
-                // Fjern kolonne i fra alle rader
                 for(auto& row : adjacency)
                     row.erase(row.begin() + i);
                 node_labels.erase(node_labels.begin() + i);
                 found = true;
-                break; // start på nytt siden indekser har endret seg
+                break;
             }
         }
     }
 }
 
-// ---------- insert_edge ----------
+
+// insert edge - legg til kant fra a til b
 
 void MatrixGraph::insert_edge(std::string a, std::string edge_label, std::string b) {
     int i = find_or_create_node(a);
@@ -67,26 +64,24 @@ void MatrixGraph::insert_edge(std::string a, std::string edge_label, std::string
     adjacency[i][j].push_back(edge_label);
 }
 
-// ---------- disconnect ----------
+// fjern alle kanter fra a til b
 
 void MatrixGraph::disconnect(std::string a, std::string b) {
     int i = find_node(a);
     int j = find_node(b);
     if(i == -1 || j == -1) return;
 
-    adjacency[i][j].clear(); // slett alle kanter fra a til b
+    adjacency[i][j].clear(); 
     remove_isolated_nodes();
 }
 
-// ---------- remove_node ----------
+// fjern node og alle kanter til/fra den
 
 void MatrixGraph::remove_node(std::string label) {
     int i = find_node(label);
     if(i == -1) return;
 
-    // Fjern rad i
     adjacency.erase(adjacency.begin() + i);
-    // Fjern kolonne i fra alle rader
     for(auto& row : adjacency)
         row.erase(row.begin() + i);
 
@@ -94,7 +89,7 @@ void MatrixGraph::remove_node(std::string label) {
     remove_isolated_nodes();
 }
 
-// ---------- Fil-I/O ----------
+// Skriv ut alle kanter 
 
 void MatrixGraph::write(std::ostream& os) const {
     for(int i = 0; i < (int)node_labels.size(); i++)
