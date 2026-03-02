@@ -4,10 +4,10 @@
 
 ```
 graph.h               ← Abstrakt grensesnitt (basis for begge implementeringer)
-incidence_graph.h     ← Deklarasjon: insidensliste-implementering
-incidence_graph.cpp   ← Implementasjon: insidensliste
-matrix_graph.h        ← Deklarasjon: matrisebasert implementering
-matrix_graph.cpp      ← Implementasjon: adjasensmatrise
+incidenceListGraph.h      ← Deklarasjon: insidensliste-implementering
+incidenceListGraph.cpp    ← Implementasjon: insidensliste
+adjacencyMatrixGraph.h        ← Deklarasjon: matrisebasert implementering
+adjacencyMatrixGraph.cpp      ← Implementasjon: adjasensmatrise
 main.cpp              ← Testing og demonstrasjon
 ```
 
@@ -33,22 +33,32 @@ Ingen `.cpp` fil – alt er `= 0` (rene virtuelle metoder).
 
 ### `incidenceListGraph.h` / `incidencListGraph.cpp`
 **Insidensliste-implementering** (Oppgave 2.1).  
-Noder og kanter er begge objekter. Hvert objekt har en liste over de andre objektene det er direkte koblet til.
+Noder og kanter er begge objekter. Grafen er rettet, og insidens er modellert eksplisitt
+ved at hver node holder separate lister for inn- og utgående kanter.
 
 ```
-Node { label, liste over insidente kanter }
-Edge { label, peker til from-node, peker til to-node }
+Node {
+label
+out → liste over utgående kanter
+in → liste over inngående kanter
+}
+
+Edge {
+label
+from → startnode
+to → målnode
+}
 ```
 
 Implementerer også **femmerregelen** (Oppgave 2.6) siden klassen eier heap-minne:
 
 | Del av femmerregelen | Hvorfor |
 |---|---|
-| Destruktør `~IncidenceGraph()` | `delete` alle noder og kanter |
-| Kopikonstruktør | Lag dype kopier – nye objekter med riktige pekere |
-| Kopitildelingsoperator `=` | Frigjør gammelt, kopier nytt |
-| Flyttekonstruktør | Ta over pekerne fra `other` |
-| Flyttetildelingsoperator `=` | Frigjør eget, ta over fra `other` |
+| Destruktør | `= default` (ressurser eies av `std::unique_ptr`) |
+| Kopikonstruktør | Dyp kopi av noder og kanter |
+| Kopitildelingsoperator `=` | Implementert med *copy-and-swap* |
+| Flyttekonstruktør | `= default` |
+| Flyttetildelingsoperator `=` | `= default` |
 
 ---
 
