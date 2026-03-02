@@ -28,7 +28,6 @@ class MatrixGraph : public Graph {
 
         int find_or_create_node(const std::string& label);
         int find_node(const std::string& label) const; 
-        void resize_matrix(int new_size);
         void remove_isolated_nodes();
        
 };
