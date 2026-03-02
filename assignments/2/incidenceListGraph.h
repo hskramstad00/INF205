@@ -25,7 +25,6 @@ private:
         Node* to;
     };
 
-    // Eierskap
     std::list<std::unique_ptr<Node>> nodes_;
     std::list<std::unique_ptr<Edge>> edges_;
 
@@ -43,13 +42,12 @@ public:
     IncidenceGraph() = default;
     ~IncidenceGraph() override = default;
 
-    IncidenceGraph(const IncidenceGraph& other);             // deep copy
-    IncidenceGraph& operator=(const IncidenceGraph& other); // copy-and-swap
+    IncidenceGraph(const IncidenceGraph& other);            
+    IncidenceGraph& operator=(const IncidenceGraph& other); 
 
     IncidenceGraph(IncidenceGraph&&) noexcept = default;
     IncidenceGraph& operator=(IncidenceGraph&&) noexcept = default;
 
-    // Graph API
     void insert_edge(std::string a, std::string edge_label, std::string b) override;
     void disconnect(std::string a, std::string b) override;
     void remove_node(std::string label) override;

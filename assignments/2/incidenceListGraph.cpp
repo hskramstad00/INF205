@@ -4,9 +4,6 @@
 #include <istream>
 #include <ostream>
 
-// ------------------------------------------------------------
-// Node-oppslag / opprettelse
-// ------------------------------------------------------------
 
 IncidenceGraph::Node* IncidenceGraph::find_node_(const std::string& label) const {
     auto it = by_label_.find(label);
@@ -22,9 +19,7 @@ IncidenceGraph::Node* IncidenceGraph::get_or_create_node_(const std::string& lab
     return raw;
 }
 
-// ------------------------------------------------------------
-// insert_edge
-// ------------------------------------------------------------
+// insert edge
 
 void IncidenceGraph::insert_edge(std::string a,
                                  std::string edge_label,
@@ -39,10 +34,7 @@ void IncidenceGraph::insert_edge(std::string a,
     to->in.push_back(e);
 }
 
-// ------------------------------------------------------------
-// disconnect(a, b) – kun a -> b
-// ------------------------------------------------------------
-
+// disnonnect fjerner kanter
 void IncidenceGraph::disconnect(std::string a, std::string b) {
     Node* from = find_node_(a);
     Node* to   = find_node_(b);
@@ -51,7 +43,7 @@ void IncidenceGraph::disconnect(std::string a, std::string b) {
     auto it = from->out.begin();
     while (it != from->out.end()) {
         Edge* e = *it;
-        ++it; // iteratoren må flyttes før sletting
+        ++it; 
         if (e->to == to) {
             remove_edge_(e);
         }
@@ -60,10 +52,7 @@ void IncidenceGraph::disconnect(std::string a, std::string b) {
     cleanup_isolated_nodes_();
 }
 
-// ------------------------------------------------------------
-// remove_node(label)
-// ------------------------------------------------------------
-
+// fjerne node
 void IncidenceGraph::remove_node(std::string label) {
     Node* n = find_node_(label);
     if (!n) return;
@@ -88,10 +77,7 @@ void IncidenceGraph::remove_node(std::string label) {
     cleanup_isolated_nodes_();
 }
 
-// ------------------------------------------------------------
-// Fjerning av én kant
-// ------------------------------------------------------------
-
+// fjerning av en kant
 void IncidenceGraph::remove_edge_(Edge* e) {
     Node* from = e->from;
     Node* to   = e->to;
@@ -107,10 +93,7 @@ void IncidenceGraph::remove_edge_(Edge* e) {
     }
 }
 
-// ------------------------------------------------------------
-// Fjern isolerte noder (ingen inn/ut-kanter)
-// ------------------------------------------------------------
-
+// fjern isolerte noder etter kantfjerning
 void IncidenceGraph::cleanup_isolated_nodes_() {
     auto it = nodes_.begin();
     while (it != nodes_.end()) {
@@ -124,10 +107,7 @@ void IncidenceGraph::cleanup_isolated_nodes_() {
     }
 }
 
-// ------------------------------------------------------------
-// Fil I/O
-// ------------------------------------------------------------
-
+// fil, inn og ut
 void IncidenceGraph::read(std::istream& is) {
     std::string a, el, b;
     while (is >> a >> el >> b) {
@@ -144,20 +124,14 @@ void IncidenceGraph::write(std::ostream& os) const {
            << e->to->label << "\n";
 }
 
-// ------------------------------------------------------------
 // clear
-// ------------------------------------------------------------
-
 void IncidenceGraph::clear() {
     nodes_.clear();
     edges_.clear();
     by_label_.clear();
 }
 
-// ------------------------------------------------------------
-// Rule of Five – deep copy + copy-and-swap
-// ------------------------------------------------------------
-
+// rule of five
 IncidenceGraph::IncidenceGraph(const IncidenceGraph& other) {
     std::unordered_map<const Node*, Node*> map;
 
