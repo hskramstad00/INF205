@@ -1,172 +1,191 @@
 #include "incidenceListGraph.h"
-#include <iostream>
-#include <stdexcept>
+#include <unordered_map>
+#include <utility>
+#include <istream>
+#include <ostream>
 
-// ---------- Private hjelpemetoder ----------
+// ------------------------------------------------------------
+// Node-oppslag / opprettelse
+// ------------------------------------------------------------
 
-IncidenceGraph::Node* IncidenceGraph::find_node(const std::string& label) const {
-    for(Node* n : nodes)
-        if(n->label == label) return n;
-    return nullptr;
+IncidenceGraph::Node* IncidenceGraph::find_node_(const std::string& label) const {
+    auto it = by_label_.find(label);
+    return (it == by_label_.end()) ? nullptr : it->second;
 }
 
-IncidenceGraph::Node* IncidenceGraph::find_or_create_node(const std::string& label) {
-    Node* n = find_node(label);
-    if(n == nullptr) {
-        n = new Node{label, {}};
-        nodes.push_back(n);
-    }
-    return n;
+IncidenceGraph::Node* IncidenceGraph::get_or_create_node_(const std::string& label) {
+    if (auto* n = find_node_(label)) return n;
+
+    nodes_.push_back(std::make_unique<Node>(label));
+    Node* raw = nodes_.back().get();
+    by_label_[label] = raw;
+    return raw;
 }
 
-void IncidenceGraph::remove_isolated_nodes() {
-    // Fjern noder som ikke har noen insidente kanter
-    auto it = nodes.begin();
-    while(it != nodes.end()) {
-        if((*it)->incident_edges.empty()) {
-            delete *it;
-            it = nodes.erase(it);
-        } else {
-            ++it;
-        }
-    }
+// ------------------------------------------------------------
+// insert_edge
+// ------------------------------------------------------------
+
+void IncidenceGraph::insert_edge(std::string a,
+                                 std::string edge_label,
+                                 std::string b) {
+    Node* from = get_or_create_node_(a);
+    Node* to   = get_or_create_node_(b);
+
+    edges_.push_back(std::make_unique<Edge>(edge_label, from, to));
+    Edge* e = edges_.back().get();
+
+    from->out.push_back(e);
+    to->in.push_back(e);
 }
 
-// ---------- insert_edge ----------
-
-void IncidenceGraph::insert_edge(std::string a, std::string edge_label, std::string b) {
-    Node* node_a = find_or_create_node(a);
-    Node* node_b = find_or_create_node(b);
-
-    Edge* e = new Edge{edge_label, node_a, node_b};
-    edges.push_back(e);
-    node_a->incident_edges.push_back(e);
-    node_b->incident_edges.push_back(e);
-}
-
-// ---------- disconnect ----------
+// ------------------------------------------------------------
+// disconnect(a, b) – kun a -> b
+// ------------------------------------------------------------
 
 void IncidenceGraph::disconnect(std::string a, std::string b) {
-    Node* node_a = find_node(a);
-    Node* node_b = find_node(b);
-    if(node_a == nullptr || node_b == nullptr) return;
+    Node* from = find_node_(a);
+    Node* to   = find_node_(b);
+    if (!from || !to) return;
 
-    // Finn alle kanter fra a til b og slett dem
-    auto it = edges.begin();
-    while(it != edges.end()) {
+    auto it = from->out.begin();
+    while (it != from->out.end()) {
         Edge* e = *it;
-        if(e->from == node_a && e->to == node_b) {
-            // Fjern fra insidenslista til begge noder
-            node_a->incident_edges.remove(e);
-            node_b->incident_edges.remove(e);
-            delete e;
-            it = edges.erase(it);
-        } else {
-            ++it;
+        ++it; // iteratoren må flyttes før sletting
+        if (e->to == to) {
+            remove_edge_(e);
         }
     }
-    remove_isolated_nodes();
+
+    cleanup_isolated_nodes_();
 }
 
-// ---------- remove_node ----------
+// ------------------------------------------------------------
+// remove_node(label)
+// ------------------------------------------------------------
 
 void IncidenceGraph::remove_node(std::string label) {
-    Node* node = find_node(label);
-    if(node == nullptr) return;
+    Node* n = find_node_(label);
+    if (!n) return;
 
-    // Slett alle kanter som involverer denne noden
-    auto it = edges.begin();
-    while(it != edges.end()) {
-        Edge* e = *it;
-        if(e->from == node || e->to == node) {
-            // Fjern fra den andre nodens insidensliste
-            if(e->from != node) e->from->incident_edges.remove(e);
-            if(e->to != node)   e->to->incident_edges.remove(e);
-            delete e;
-            it = edges.erase(it);
+    // Fjern alle utkanter
+    while (!n->out.empty())
+        remove_edge_(n->out.front());
+
+    // Fjern alle innkanter
+    while (!n->in.empty())
+        remove_edge_(n->in.front());
+
+    by_label_.erase(n->label);
+
+    for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
+        if (it->get() == n) {
+            nodes_.erase(it);
+            break;
+        }
+    }
+
+    cleanup_isolated_nodes_();
+}
+
+// ------------------------------------------------------------
+// Fjerning av én kant
+// ------------------------------------------------------------
+
+void IncidenceGraph::remove_edge_(Edge* e) {
+    Node* from = e->from;
+    Node* to   = e->to;
+
+    from->out.remove(e);
+    to->in.remove(e);
+
+    for (auto it = edges_.begin(); it != edges_.end(); ++it) {
+        if (it->get() == e) {
+            edges_.erase(it);
+            break;
+        }
+    }
+}
+
+// ------------------------------------------------------------
+// Fjern isolerte noder (ingen inn/ut-kanter)
+// ------------------------------------------------------------
+
+void IncidenceGraph::cleanup_isolated_nodes_() {
+    auto it = nodes_.begin();
+    while (it != nodes_.end()) {
+        Node* n = it->get();
+        if (n->in.empty() && n->out.empty()) {
+            by_label_.erase(n->label);
+            it = nodes_.erase(it);
         } else {
             ++it;
         }
     }
-
-    nodes.remove(node);
-    delete node;
-
-    remove_isolated_nodes();
 }
 
-// ---------- Fil-I/O ----------
-
-void IncidenceGraph::write(std::ostream& os) const {
-    for(Edge* e : edges)
-        os << e->from->label << " " << e->label << " " << e->to->label << "\n";
-}
+// ------------------------------------------------------------
+// Fil I/O
+// ------------------------------------------------------------
 
 void IncidenceGraph::read(std::istream& is) {
-    std::string a, edge_label, b;
-    while(is >> a >> edge_label >> b)
-        insert_edge(a, edge_label, b);
-}
-
-// ---------- Femmerregelen ----------
-
-IncidenceGraph::~IncidenceGraph() {
-    for(Edge* e : edges) delete e;
-    for(Node* n : nodes) delete n;
-}
-
-IncidenceGraph::IncidenceGraph(const IncidenceGraph& other) {
-    // Kopier alle noder først
-    for(Node* n : other.nodes)
-        nodes.push_back(new Node{n->label, {}});
-
-    // Kopier kanter og koble til riktige (nye) node-objekter
-    for(Edge* e : other.edges) {
-        Node* new_from = find_node(e->from->label);
-        Node* new_to   = find_node(e->to->label);
-        Edge* new_edge = new Edge{e->label, new_from, new_to};
-        edges.push_back(new_edge);
-        new_from->incident_edges.push_back(new_edge);
-        new_to->incident_edges.push_back(new_edge);
+    std::string a, el, b;
+    while (is >> a >> el >> b) {
+        if (!b.empty() && b.back() == '.')
+            b.pop_back(); // støtter "A e B."
+        insert_edge(a, el, b);
     }
 }
 
-IncidenceGraph::IncidenceGraph(IncidenceGraph&& other) noexcept
-    : nodes(std::move(other.nodes)), edges(std::move(other.edges)) {}
-
-IncidenceGraph& IncidenceGraph::operator=(const IncidenceGraph& other) {
-    if(this == &other) return *this;
-    // Frigjør eget innhold
-    for(Edge* e : edges) delete e;
-    for(Node* n : nodes) delete n;
-    nodes.clear();
-    edges.clear();
-    // Kopier fra other (samme logikk som kopikonstruktør)
-    for(Node* n : other.nodes)
-        nodes.push_back(new Node{n->label, {}});
-    for(Edge* e : other.edges) {
-        Node* new_from = find_node(e->from->label);
-        Node* new_to   = find_node(e->to->label);
-        Edge* new_edge = new Edge{e->label, new_from, new_to};
-        edges.push_back(new_edge);
-        new_from->incident_edges.push_back(new_edge);
-        new_to->incident_edges.push_back(new_edge);
-    }
-    return *this;
+void IncidenceGraph::write(std::ostream& os) const {
+    for (const auto& e : edges_)
+        os << e->from->label << " "
+           << e->label << " "
+           << e->to->label << "\n";
 }
 
-IncidenceGraph& IncidenceGraph::operator=(IncidenceGraph&& other) noexcept {
-    if(this == &other) return *this;
-    for(Edge* e : edges) delete e;
-    for(Node* n : nodes) delete n;
-    nodes = std::move(other.nodes);
-    edges = std::move(other.edges);
-    return *this;
-}
+// ------------------------------------------------------------
+// clear
+// ------------------------------------------------------------
 
 void IncidenceGraph::clear() {
-    for(Edge* e : edges) delete e;
-    for(Node* n : nodes) delete n;
-    edges.clear();
-    nodes.clear();
+    nodes_.clear();
+    edges_.clear();
+    by_label_.clear();
+}
+
+// ------------------------------------------------------------
+// Rule of Five – deep copy + copy-and-swap
+// ------------------------------------------------------------
+
+IncidenceGraph::IncidenceGraph(const IncidenceGraph& other) {
+    std::unordered_map<const Node*, Node*> map;
+
+    // Kopier noder
+    for (const auto& np : other.nodes_) {
+        nodes_.push_back(std::make_unique<Node>(np->label));
+        Node* new_node = nodes_.back().get();
+        by_label_[new_node->label] = new_node;
+        map[np.get()] = new_node;
+    }
+
+    // Kopier kanter
+    for (const auto& ep : other.edges_) {
+        Node* from = map.at(ep->from);
+        Node* to   = map.at(ep->to);
+
+        edges_.push_back(std::make_unique<Edge>(ep->label, from, to));
+        Edge* e = edges_.back().get();
+        from->out.push_back(e);
+        to->in.push_back(e);
+    }
+}
+
+IncidenceGraph& IncidenceGraph::operator=(const IncidenceGraph& other) {
+    if (this == &other) return *this;
+    IncidenceGraph tmp(other);
+    std::swap(nodes_, tmp.nodes_);
+    std::swap(edges_, tmp.edges_);
+    std::swap(by_label_, tmp.by_label_);
+    return *this;
 }

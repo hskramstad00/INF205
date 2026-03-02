@@ -1,45 +1,59 @@
 #pragma once
 #include "graph.h"
-#include <string>
+
 #include <list>
+#include <memory>
+#include <string>
+#include <unordered_map>
 
 class IncidenceGraph : public Graph {
-    public:
-        IncidenceGraph() = default;
-        IncidenceGraph(const IncidenceGraph& other);
-        IncidenceGraph(IncidenceGraph&& other) noexcept;
-        IncidenceGraph& operator=(const IncidenceGraph& other);
-        IncidenceGraph& operator=(IncidenceGraph&& other) noexcept;
-        ~IncidenceGraph();
+private:
+    struct Edge;
 
-        void insert_edge(std::string a, std::string edge_label, std::string b) override;
-        void disconnect(std::string a, std::string b) override;
-        void remove_node(std::string label) override;
-        void read(std::istream& os) override;
-        void write(std::ostream& iss) const override;
-        void clear() override;
+    struct Node {
+        explicit Node(std::string lbl) : label(std::move(lbl)) {}
+        std::string label;
+        std::list<Edge*> out; // utgående kanter
+        std::list<Edge*> in;  // inngående kanter
+    };
 
-    private:
+    struct Edge {
+        Edge(std::string lbl, Node* f, Node* t)
+            : label(std::move(lbl)), from(f), to(t) {}
+        std::string label;
+        Node* from;
+        Node* to;
+    };
 
-        struct Node;
+    // Eierskap
+    std::list<std::unique_ptr<Node>> nodes_;
+    std::list<std::unique_ptr<Edge>> edges_;
 
-        struct Edge {
-            std::string label;
-            Node* from;
-            Node* to;
-        };
+    // Raskt oppslag: label -> Node*
+    std::unordered_map<std::string, Node*> by_label_;
 
-        struct Node {
-            std::string label;
-            std::list<Edge*> incident_edges;
-        };
-        
-        std::list<Node*> nodes;
-        std::list<Edge*> edges;
+    Node* find_node_(const std::string& label) const;
+    Node* get_or_create_node_(const std::string& label);
 
-        Node* find_or_create_node(const std::string& label);
-        Node* find_node(const std::string& label) const;
-        void remove_isolated_nodes();
+    void remove_edge_(Edge* e);
+    void cleanup_isolated_nodes_();
 
+public:
+    // Rule of five
+    IncidenceGraph() = default;
+    ~IncidenceGraph() override = default;
 
+    IncidenceGraph(const IncidenceGraph& other);             // deep copy
+    IncidenceGraph& operator=(const IncidenceGraph& other); // copy-and-swap
+
+    IncidenceGraph(IncidenceGraph&&) noexcept = default;
+    IncidenceGraph& operator=(IncidenceGraph&&) noexcept = default;
+
+    // Graph API
+    void insert_edge(std::string a, std::string edge_label, std::string b) override;
+    void disconnect(std::string a, std::string b) override;
+    void remove_node(std::string label) override;
+    void write(std::ostream& os) const override;
+    void read(std::istream& is) override;
+    void clear() override;
 };
