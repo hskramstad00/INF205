@@ -95,13 +95,15 @@ void MatrixGraph::write(std::ostream& os) const {
     for(int i = 0; i < (int)node_labels.size(); i++)
         for(int j = 0; j < (int)node_labels.size(); j++)
             for(const std::string& edge_label : adjacency[i][j])
-                os << node_labels[i] << " " << edge_label << " " << node_labels[j] << "\n";
+                os << node_labels[i] << " " << edge_label << " " << node_labels[j] << ".\n";
 }
 
 void MatrixGraph::read(std::istream& is) {
     std::string a, edge_label, b;
-    while(is >> a >> edge_label >> b)
+    while(is >> a >> edge_label >> b) {
+        if (!b.empty() && b.back() == '.') b.pop_back();
         insert_edge(a, edge_label, b);
+    }
 }
 
 void MatrixGraph::clear() {

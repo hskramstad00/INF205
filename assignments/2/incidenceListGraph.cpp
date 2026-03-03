@@ -121,7 +121,7 @@ void IncidenceGraph::write(std::ostream& os) const {
     for (const auto& e : edges_)
         os << e->from->label << " "
            << e->label << " "
-           << e->to->label << "\n";
+           << e->to->label << ".\n";
 }
 
 // clear
