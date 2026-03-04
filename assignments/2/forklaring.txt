@@ -1,9 +1,9 @@
 INF205. Oppgave 2
 
-2.1  incidenceListGraph.h / incidenceListGraph.cpp
-2.2  IncidenceGraph::read / write  og  MatrixGraph::read / write
-2.3  graph.h (abstrakt baseklasse),  IncidenceGraph og MatrixGraph arver med override
-2.4  adjacencyMatrixGraph.h / adjacencyMatrixGraph.cpp
-2.5  IncidenceGraph::disconnect / remove_node  og  MatrixGraph::disconnect / remove_node
-2.6  IncidenceGraph: kopikonstruktør og kopitildelingsoperator manuelt implementert i incidenceListGraph.cpp
+2.1:  incidenceListGraph.h / incidenceListGraph.cpp
+2.2:  IncidenceGraph::read / write  og  MatrixGraph::read / write
+2.3:  graph.h (abstrakt baseklasse),  IncidenceGraph og MatrixGraph arver med override
+2.4:  adjacencyMatrixGraph.h / adjacencyMatrixGraph.cpp
+2.5:  IncidenceGraph::disconnect / remove_node  og  MatrixGraph::disconnect / remove_node
+2.6:  IncidenceGraph: kopikonstruktør og kopitildelingsoperator manuelt implementert i incidenceListGraph.cpp
      MatrixGraph: alle fem = default (vector/list eier minnet)
