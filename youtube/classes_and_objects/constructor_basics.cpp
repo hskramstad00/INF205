@@ -25,7 +25,24 @@ class Cat
             color = "Unokwn";
             favorite_toy = "Unown";
         }
+
+        Cat (string n)
+        {
+            name = n;
+            color = "Unknown";
+            favorite_toy = "Unknown";
+        }
+
+        Cat (string n, string c, string ft = "Laser Pointer");
+
 };
+
+Cat::Cat(string n, string c, string ft)
+{
+            name = n;
+            color = c;
+            favorite_toy = ft;
+}
 
 int main()
 {
@@ -34,6 +51,21 @@ int main()
 
     cout << "Cat1.. " << '\n';
     cat1.print_cat();
+    cout << '\n';
+
+    Cat cat2("Spot");
+    cout << "Cat2.." << '\n';
+    cat2.print_cat();
+    cout << '\n';
+
+    Cat cat3("Garfield", "Orange", "Ball of Yarn");
+    cout << "Cat3.." << '\n';
+    cat3.print_cat();
+    cout << '\n';
+
+    Cat cat4("Garfield", "Orange");
+    cout << "Cat4.." << '\n';
+    cat4.print_cat();
     cout << '\n';
 
     return 0;
