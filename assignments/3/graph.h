@@ -8,7 +8,6 @@ class Graph {
 public:
     virtual ~Graph() = default;
 
-    // ── Mutating operations (oppgave 2) ─────────────────────────────────────
     virtual void insert_edge(std::string node_a_label,
                              std::string edge_label,
                              std::string node_b_label) = 0;
@@ -18,12 +17,10 @@ public:
 
     virtual void remove_node(std::string node) = 0;
 
-    // ── Serialisation (oppgave 2) ────────────────────────────────────────────
     virtual void write(std::ostream& os) const = 0;
     virtual void read(std::istream& is) = 0;
     virtual void clear() = 0;
 
-    // ── Traversal interface (oppgave 3) ──────────────────────────────────────
 
     /// Returns labels of every node currently in the graph.
     virtual std::vector<std::string> nodes() const = 0;
