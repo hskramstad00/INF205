@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 BENCH_DIR = "benchmark"
 
-# ---------- SCC ----------
 scc_file = os.path.join(BENCH_DIR, "scc_results.csv")
 scc = pd.read_csv(scc_file)
 
@@ -29,7 +28,6 @@ plt.tight_layout()
 plt.savefig(os.path.join(BENCH_DIR, "scc_plot.png"))
 plt.close()
 
-# ---------- Diamond ----------
 diamond_file = os.path.join(BENCH_DIR, "diamond_results.csv")
 diamond = pd.read_csv(diamond_file)
 
