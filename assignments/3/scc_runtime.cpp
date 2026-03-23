@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
             return 1;
         }
 
-        for (const std::string mode : {std::string("incidence"), std::string("matrix")}) {
+        for (const std::string& mode : {std::string("incidence"), std::string("matrix")}) {
             auto g = make_graph(mode);
             if (!load_graph(*g, graph_file)) {
                 std::cerr << "Could not load graph file: " << graph_file << "\n";

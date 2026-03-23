@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
     std::cout << std::fixed << std::setprecision(3);
 
     for (long n = n_start; n <= n_end; n *= factor) {
-        for (const std::string scenario : {std::string("constant"), std::string("proportional")}) {
+        for (const std::string& scenario : {std::string("constant"), std::string("proportional")}) {
             const int m = (scenario == "constant") ? constant_m : std::max(1L, n / proportional_divisor);
             const std::string graph_file = "bench_diamond_" + scenario + "_" + std::to_string(n) + ".dat";
             const std::string query_file = "bench_diamond_" + scenario + "_" + std::to_string(n) + ".qry";
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
                 return 1;
             }
 
-            for (const std::string mode : {std::string("incidence"), std::string("matrix")}) {
+            for (const std::string& mode : {std::string("incidence"), std::string("matrix")}) {
                 auto g = make_graph(mode);
                 if (!load_graph(*g, graph_file)) {
                     std::cerr << "Could not load graph file: " << graph_file << "\n";
