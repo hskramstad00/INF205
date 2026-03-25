@@ -112,12 +112,6 @@ MatrixGraph::successors(const std::string& node,
     int n = (int)node_labels_.size();
     for (int j = 0; j < n; ++j)
         for (const auto& lbl : adjacency_[i][j])
-            if (lbl == edge_label) { result.push_back(node_labels_[j]); break; }
-    // Note: break after first match per (i,j) cell; multiple same-label edges
-    // in one cell are possible, so collect all:
-    result.clear();
-    for (int j = 0; j < n; ++j)
-        for (const auto& lbl : adjacency_[i][j])
             if (lbl == edge_label) result.push_back(node_labels_[j]);
     return result;
 }
