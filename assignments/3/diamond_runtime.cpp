@@ -57,7 +57,7 @@ bool generate_graph(long n, int m,
     return std::system(cmd.str().c_str()) == 0;
 }
 
-} // namespace
+} 
 
 int main(int argc, char** argv) {
     if (argc != 8) {

@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 
-// Hjelpe funksjon for printing
 void seksjon(const std::string& tittel) {
     std::cout << "\n========== " << tittel << " ==========\n";
 }
@@ -16,7 +15,6 @@ int main(int argc, char* argv[]) {
         // Oppgave 2.2 - FIl input/ skriv til fil
         seksjon("2.2 Fil I/O: skriv til fil");
 
-        // må først insert edge for å få opprettet nodene
         IncidenceGraph ig;
         ig.insert_edge("Oslo",      "fly",  "Bergen");
         ig.insert_edge("Bergen",    "tog",  "Trondheim");

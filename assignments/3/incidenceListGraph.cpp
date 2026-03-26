@@ -4,7 +4,6 @@
 #include <istream>
 #include <ostream>
 
-// ── Internal helpers ─────────────────────────────────────────────────────────
 
 IncidenceGraph::Node* IncidenceGraph::find_node_(const std::string& label) const {
     auto it = by_label_.find(label);
@@ -40,7 +39,7 @@ void IncidenceGraph::cleanup_isolated_nodes_() {
     }
 }
 
-// ── Oppgave 2 ────────────────────────────────────────────────────────────────
+// Oppgave 2 
 
 void IncidenceGraph::insert_edge(std::string a,
                                   std::string edge_label,
@@ -96,8 +95,7 @@ void IncidenceGraph::clear() {
     by_label_.clear();
 }
 
-// ── Oppgave 3 – traversal ────────────────────────────────────────────────────
-
+// Oppgave 3
 std::vector<std::string> IncidenceGraph::nodes() const {
     std::vector<std::string> result;
     result.reserve(nodes_.size());
@@ -126,8 +124,7 @@ IncidenceGraph::successors(const std::string& node,
     return result;
 }
 
-// ── Rule of five ─────────────────────────────────────────────────────────────
-
+// Rule of five
 IncidenceGraph::IncidenceGraph(const IncidenceGraph& other) {
     std::unordered_map<const Node*, Node*> map;
     for (const auto& np : other.nodes_) {

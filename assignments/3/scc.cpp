@@ -3,7 +3,6 @@
 #include <stack>
 #include <unordered_map>
 
-// ── State delt på tvers av alle rekursive kall ────────────────────────────
 struct TarjanState {
     std::unordered_map<std::string, int>  index_map;
     std::unordered_map<std::string, int>  lowlink_map;
@@ -13,7 +12,6 @@ struct TarjanState {
     int counter = 0;
 };
 
-// ── Rekursiv DFS-hjelper ──────────────────────────────────────────────────
 static void strongconnect(const Graph& g,
                            const std::string& v,
                            TarjanState& s) {
@@ -27,12 +25,9 @@ static void strongconnect(const Graph& g,
     // Behandle alle utgående kanter
     for (const auto& [edge_lbl, w] : g.out_edges(v)) {
         if (!s.index_map.count(w)) {
-            // Tree edge – rekurser ned i w
             strongconnect(g, w, s);
-            // Etter retur: propagér lowlink opp
             s.lowlink_map[v] = std::min(s.lowlink_map[v], s.lowlink_map[w]);
         } else if (s.on_stack_map[w]) {
-            // Back-edge til node som fortsatt er på stacken
             s.lowlink_map[v] = std::min(s.lowlink_map[v], s.index_map[w]);
         }
     }
@@ -51,7 +46,6 @@ static void strongconnect(const Graph& g,
     }
 }
 
-// ── Offentlig funksjon ───────────────────────────
 std::vector<std::vector<std::string>>
 tarjan_scc(const Graph& g, bool verbose) {
     TarjanState s;

@@ -22,14 +22,13 @@ public:
     void read(std::istream& is) override;
     void clear() override;
 
-    // Oppgave 3 – traversal
+    // Oppgave 3
     std::vector<std::string> nodes() const override;
     std::vector<std::pair<std::string,std::string>> out_edges(const std::string& node) const override;
     std::vector<std::string> successors(const std::string& node, const std::string& edge_label) const override;
 
 private:
     std::vector<std::string> node_labels_;
-    // adjacency_[i][j] = liste over kantetiketter fra node i til node j
     std::vector<std::vector<std::list<std::string>>> adjacency_;
 
     int find_node_(const std::string& label) const;

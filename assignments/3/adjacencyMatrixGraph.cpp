@@ -1,7 +1,6 @@
 #include "adjacencyMatrixGraph.h"
 #include <iostream>
 
-// ── Internal helpers ─────────────────────────────────────────────────────────
 
 int MatrixGraph::find_node_(const std::string& label) const {
     for (int i = 0; i < (int)node_labels_.size(); ++i)
@@ -14,8 +13,8 @@ int MatrixGraph::find_or_create_node_(const std::string& label) {
     if (i != -1) return i;
     node_labels_.push_back(label);
     int n = (int)node_labels_.size();
-    for (auto& row : adjacency_) row.emplace_back();     // extend existing rows
-    adjacency_.emplace_back(n);                          // add new row
+    for (auto& row : adjacency_) row.emplace_back();     
+    adjacency_.emplace_back(n);                          
     return n - 1;
 }
 
@@ -39,7 +38,7 @@ void MatrixGraph::remove_isolated_nodes_() {
     }
 }
 
-// ── Oppgave 2 ────────────────────────────────────────────────────────────────
+// Oppgave 2
 
 void MatrixGraph::insert_edge(std::string a, std::string edge_label, std::string b) {
     int i = find_or_create_node_(a);
@@ -85,7 +84,7 @@ void MatrixGraph::clear() {
     adjacency_.clear();
 }
 
-// ── Oppgave 3 – traversal ────────────────────────────────────────────────────
+// Oppgave 3
 
 std::vector<std::string> MatrixGraph::nodes() const {
     return node_labels_;

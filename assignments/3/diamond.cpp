@@ -3,13 +3,7 @@
 #include <unordered_set>
 #include <sstream>
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Starting from a set of nodes, follow the label sequence one step at a time.
- * Returns the set of nodes reachable from @p start_nodes by traversing edges
- * with labels labels[0], labels[1], ..., labels[m-1] in order.
- */
 static std::unordered_set<std::string>
 follow_path(const Graph& g,
             const std::string& start,
@@ -29,7 +23,6 @@ follow_path(const Graph& g,
     return current;
 }
 
-// ── Public API ───────────────────────────────────────────────────────────────
 
 std::vector<std::pair<std::string,std::string>>
 diamond_query(const Graph& g,
@@ -46,15 +39,12 @@ diamond_query(const Graph& g,
     const auto all_nodes = g.nodes();
 
     for (const auto& ni : all_nodes) {
-        // All nodes reachable via path1 labels from ni
         auto ends1 = follow_path(g, ni, path1);
         if (ends1.empty()) continue;
 
-        // All nodes reachable via path2 labels from ni
         auto ends2 = follow_path(g, ni, path2);
         if (ends2.empty()) continue;
 
-        // Intersection = valid nj targets
         for (const auto& nj : ends1)
             if (ends2.count(nj))
                 result.emplace_back(ni, nj);
@@ -79,7 +69,6 @@ void read_query(std::istream& is,
     int line_no = 0;
 
     while (std::getline(is, line) && line_no < 2) {
-        // Remove trailing '.' and whitespace
         while (!line.empty() && (line.back() == '.' || line.back() == '\r'
                                   || line.back() == ' '))
             line.pop_back();

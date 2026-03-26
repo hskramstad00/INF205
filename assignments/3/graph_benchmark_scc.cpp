@@ -1,9 +1,3 @@
-// executable should be called as follows:
-//
-// ./graph-benchmark-scc  <number of nodes> <number of edges> <graph file>
-//
-// for example: ./generate-graph 256 2048 scc08.dat
-
 #include <cassert>
 #include <chrono>
 #include <cmath>
@@ -15,7 +9,7 @@
 
 int main(int argc, char** argv)
 {
-   assert(argc == 4);  // ./graph-benchmark-scc <number of nodes> <number of edges> <graph file>
+   assert(argc == 4); 
    
    long nodes = std::atol(argv[1]);
    assert(nodes > 0);
@@ -27,14 +21,12 @@ int main(int argc, char** argv)
 
    std::cout << "Graph file: " << argv[3] << "\n";
    
-   // random seed from chrono
    std::srand(
       std::chrono::duration_cast<std::chrono::nanoseconds>(
          std::chrono::high_resolution_clock::now().time_since_epoch()
       ).count()
    );
 
-   // generate graph file
    std::ofstream gout(argv[3]);
    if(!gout) return EXIT_FAILURE;
    std::cout << "\nGenerating:\n";
@@ -62,7 +54,6 @@ int main(int argc, char** argv)
       k++;
    }
    
-   // remaining nodes
    for(long i = 0; i < nodes; i++)
       if(!covered[i])
       {
@@ -72,7 +63,6 @@ int main(int argc, char** argv)
          k++;
       }
 
-   // remaining edges
    while(k < edges)
    {
       long i = nodes * ((double)std::rand()/(RAND_MAX + 1.0));

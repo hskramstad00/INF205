@@ -1,19 +1,3 @@
-/**
- * main_diamond.cpp – Problem 3.2: Diamond-shaped path query.
- *
- * Usage:
- *   ./diamond [-v|-s] [-m incidence|matrix] <graph_file> <query_file>
- *
- * Query file format (two lines, each terminated by '.'):
- *   r0 r2 r4.
- *   r1 r3 r5.
- *
- * Flags:
- *   -v   verbose  (print all matching pairs, default)
- *   -s   silent   (print only pair count)
- *   -m incidence  use IncidenceGraph (default)
- *   -m matrix     use MatrixGraph
- */
 #include "graph.h"
 #include "incidenceListGraph.h"
 #include "adjacencyMatrixGraph.h"
@@ -26,7 +10,6 @@
 #include <string>
 
 int main(int argc, char** argv) {
-    // ── Parse command line ───────────────────────────────────────────────────
     bool verbose = true;
     std::string graph_file, query_file;
     std::string mode = "incidence";
@@ -50,7 +33,6 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    // ── Load graph ───────────────────────────────────────────────────────────
     std::unique_ptr<Graph> g;
     if (mode == "matrix") g = std::make_unique<MatrixGraph>();
     else                  g = std::make_unique<IncidenceGraph>();
@@ -59,7 +41,6 @@ int main(int argc, char** argv) {
     if (!gin) { std::cerr << "Cannot open graph: " << graph_file << "\n"; return 1; }
     g->read(gin);
 
-    // ── Load query ───────────────────────────────────────────────────────────
     std::vector<std::string> path1, path2;
     std::ifstream qin(query_file);
     if (!qin) { std::cerr << "Cannot open query: " << query_file << "\n"; return 1; }
@@ -76,7 +57,6 @@ int main(int argc, char** argv) {
         std::cout << "\n\n";
     }
 
-    // ── Run diamond query ────────────────────────────────────────────────────
     auto t0 = std::chrono::high_resolution_clock::now();
     auto pairs = diamond_query(*g, path1, path2, verbose);
     auto t1 = std::chrono::high_resolution_clock::now();

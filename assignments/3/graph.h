@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <iosfwd>
-#include <utility>   // std::pair
+#include <utility>
 
 class Graph {
 public:
@@ -22,15 +22,11 @@ public:
     virtual void clear() = 0;
 
 
-    /// Returns labels of every node currently in the graph.
     virtual std::vector<std::string> nodes() const = 0;
 
-    /// Returns all outgoing edges of @p node as {edge_label, target_node} pairs.
     virtual std::vector<std::pair<std::string,std::string>>
     out_edges(const std::string& node) const = 0;
 
-    /// Returns labels of all successor nodes reachable from @p node via an
-    /// edge whose label equals @p edge_label.
     virtual std::vector<std::string>
     successors(const std::string& node,
                const std::string& edge_label) const = 0;

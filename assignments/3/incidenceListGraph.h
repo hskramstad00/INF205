@@ -15,8 +15,8 @@ private:
     struct Node {
         explicit Node(std::string lbl) : label(std::move(lbl)) {}
         std::string label;
-        std::list<Edge*> out;  // utgående kanter
-        std::list<Edge*> in;   // inngående kanter
+        std::list<Edge*> out;  
+        std::list<Edge*> in;   
     };
 
     struct Edge {
@@ -55,7 +55,7 @@ public:
     void read(std::istream& is) override;
     void clear() override;
 
-    // Oppgave 3 – traversal
+    // Oppgave 3 
     std::vector<std::string> nodes() const override;
     std::vector<std::pair<std::string,std::string>> out_edges(const std::string& node) const override;
     std::vector<std::string> successors(const std::string& node, const std::string& edge_label) const override;
