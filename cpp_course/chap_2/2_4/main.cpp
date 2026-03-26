@@ -17,6 +17,7 @@ void printDouble(int value)
 
 int main()
 {
+    // the value from argument num is copied into the value paramter
     int num { getValueFromUser() };
 
     printDouble(num);
