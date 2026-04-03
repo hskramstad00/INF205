@@ -57,6 +57,8 @@ compile_commands.json
 *.log 
 *.bak 
 *.swp 
+*.exe
+*.o
 
 # vcpkg
 vcpkg_installed/
@@ -71,3 +73,27 @@ Testing/
 main
 
 .vscode/
+
+io-operator-overloading
+
+book-index
+
+PrintStandard
+
+main2
+
+test
+
+graph
+
+public_and_private_access_specifiers
+
+introduction_classes_and_objects
+
+class_member_functions_methods
+
+static_member_functions
+
+destructor_basic
+
+constructor_basics
