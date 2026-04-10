@@ -7,6 +7,7 @@
 
 class MatrixGraph : public Graph {
 public:
+    // all rule of five defaulted, since we only use STL containers that mange their own memory
     MatrixGraph() = default;
     MatrixGraph(const MatrixGraph&) = default;
     MatrixGraph(MatrixGraph&&) noexcept = default;
@@ -28,9 +29,14 @@ public:
     std::vector<std::string> successors(const std::string& node, const std::string& edge_label) const override;
 
 private:
+    // all node labels
     std::vector<std::string> node_labels_;
+
+    // the matrix, nodes are columns and rows, each cell contain a list of edge labels
+    // row i and column j represent edges from node_labels_[i] to node_labels_[j]
     std::vector<std::vector<std::list<std::string>>> adjacency_;
 
+    // helper functions
     int find_node_(const std::string& label) const;
     int find_or_create_node_(const std::string& label);
     void remove_isolated_nodes_();

@@ -1,13 +1,14 @@
 #include "adjacencyMatrixGraph.h"
 #include <iostream>
 
-
+// loop through node labels to find index of given label, or -1 if not found
 int MatrixGraph::find_node_(const std::string& label) const {
     for (int i = 0; i < (int)node_labels_.size(); ++i)
         if (node_labels_[i] == label) return i;
     return -1;
 }
 
+// find index of given label, or create new node if not found and return new index
 int MatrixGraph::find_or_create_node_(const std::string& label) {
     int i = find_node_(label);
     if (i != -1) return i;
@@ -18,6 +19,7 @@ int MatrixGraph::find_or_create_node_(const std::string& label) {
     return n - 1;
 }
 
+// remove all nodes with no incoming or outgoing edges found
 void MatrixGraph::remove_isolated_nodes_() {
     bool found = true;
     while (found) {
